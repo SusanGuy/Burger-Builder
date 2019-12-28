@@ -32,7 +32,7 @@ class ContactData extends Component {
       await this.setState({
         loading: false
       });
-      this.props.history.push("/");
+      this.props.history.push("/orders");
     } catch (err) {
       this.setState({
         loading: false
