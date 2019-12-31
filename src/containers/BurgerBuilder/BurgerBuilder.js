@@ -8,7 +8,7 @@ import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import axios from "../../axios-orders";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import Spinner from "../../components/UI/Spinner/Spinner";
-import actionType from "../../store/actions";
+import * as actionTypes from "../../store/Actions/index";
 
 class BurgerBuilder extends Component {
   state = {
@@ -17,17 +17,8 @@ class BurgerBuilder extends Component {
     error: false
   };
 
-  async componentDidMount() {
-    // try {
-    //   const ingredients = await axios.get("/ingredients.json");
-    //   this.setState({
-    //     ingredients: ingredients.data
-    //   });
-    // } catch (err) {
-    //   this.setState({
-    //     error: true
-    //   });
-    // }
+  componentDidMount() {
+    this.props.onInitializeComponent();
   }
 
   updatePurchaseState(ingredients) {
@@ -101,7 +92,7 @@ class BurgerBuilder extends Component {
     }
     let orderSummary;
 
-    let burger = this.state.error ? (
+    let burger = this.props.error ? (
       <p>Ingredients can't be loaded</p>
     ) : (
       <Spinner />
@@ -147,22 +138,18 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => {
   return {
     ings: state.ingredients,
-    totalPrice: state.totalPrice
+    totalPrice: state.totalPrice,
+    error: state.error
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onIngredientAdded: ingredientName =>
-      dispatch({
-        type: actionType.ADD_INGREDIENT,
-        ingredientName
-      }),
+      dispatch(actionTypes.addIngredient(ingredientName)),
     onIngredientDeleted: ingredientName =>
-      dispatch({
-        type: actionType.REMOVE_INGREDIENT,
-        ingredientName
-      })
+      dispatch(actionTypes.removeIngredient(ingredientName)),
+    onInitializeComponent: () => dispatch(actionTypes.initIngredients())
   };
 };
 

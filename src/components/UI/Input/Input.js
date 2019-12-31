@@ -50,6 +50,8 @@ const input = props => {
         </select>
       );
       break;
+    default:
+      return null;
   }
   return (
     <div className={classes.Input}>
