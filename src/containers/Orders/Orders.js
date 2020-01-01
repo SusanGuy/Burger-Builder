@@ -6,12 +6,8 @@ import { connect } from "react-redux";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import * as actions from "../../store/Actions/index";
 class Orders extends Component {
-  state = {
-    orders: [],
-    loading: true
-  };
   componentDidMount() {
-    this.props.onFetchOrders();
+    this.props.onFetchOrders(this.props.token);
   }
   render() {
     const userOrders = this.props.orders.map(order => {
@@ -31,13 +27,14 @@ class Orders extends Component {
 const mapStateToProps = state => {
   return {
     orders: state.orders.orders,
-    loading: state.orders.loading
+    loading: state.orders.loading,
+    token: state.auth.token
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onFetchOrders: () => dispatch(actions.fetchAllOrders())
+    onFetchOrders: token => dispatch(actions.fetchAllOrders(token))
   };
 };
 

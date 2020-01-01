@@ -40,7 +40,6 @@ const reducer = (state = initialState, action) => {
         loading: true
       };
     case actionTypes.FETCH_ORDERS:
-      console.log(action.orders);
       return {
         ...state,
         orders: action.orders,

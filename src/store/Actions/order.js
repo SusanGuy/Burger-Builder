@@ -49,7 +49,7 @@ const fetchOrders = orders => {
 
 const fetchOrdersFail = err => {
   return {
-    type: actionTypes.FETCH_INGREDIENTS_FAILED
+    type: actionTypes.FETCH_ORDERS_FAILED
   };
 };
 
@@ -60,11 +60,11 @@ const fetchOrdersInit = err => {
   };
 };
 
-export const fetchAllOrders = () => {
+export const fetchAllOrders = token => {
   return async dispatch => {
     dispatch(fetchOrdersInit());
     try {
-      const orders = await axios.get("/orders.json");
+      const orders = await axios.get(`/orders.json?auth=${token}`);
       const fetchedOrders = [];
 
       for (let key in orders.data) {
