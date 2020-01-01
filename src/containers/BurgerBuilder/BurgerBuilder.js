@@ -33,50 +33,16 @@ class BurgerBuilder extends Component {
     return sum > 0;
   }
 
-  // addIngredientHandler = type => {
-  //   const oldCount = this.state.ingredients[type];
-  //   const updatedCount = oldCount + 1;
-  //   const updatedIngredient = {
-  //     ...this.state.ingredients
-  //   };
-
-  //   updatedIngredient[type] = updatedCount;
-  //   const priceAddition = INGREDIENT_PRICES[type];
-  //   const oldPrice = this.state.totalPrice;
-  //   const newPrice = oldPrice + priceAddition;
-  //   this.setState({
-  //     ingredients: updatedIngredient,
-  //     totalPrice: newPrice
-  //   });
-  //   this.updatePurchaseState(updatedIngredient);
-  // };
-
   purchaseHandler = () => {
     this.setState({ purchasing: true });
   };
-  // removeIngridientHandler = type => {
-  //   const oldCount = this.state.ingredients[type];
-  //   if (oldCount <= 0) {
-  //     return;
-  //   }
-  //   const newCount = oldCount - 1;
-  //   const updatedState = {
-  //     ...this.state.ingredients
-  //   };
-  //   updatedState[type] = newCount;
-  //   const updatedPrice = this.state.totalPrice - INGREDIENT_PRICES[type];
-  //   this.setState({
-  //     ingredients: updatedState,
-  //     totalPrice: updatedPrice
-  //   });
-  //   this.updatePurchaseState(updatedState);
-  // };
 
   purchaseCancelHandler = () => {
     this.setState({ purchasing: false });
   };
 
   purchaseContinueHandler = async () => {
+    this.props.onInitPurchase();
     this.props.history.push({
       pathname: "/checkout"
     });
@@ -137,9 +103,9 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
-    ings: state.ingredients,
-    totalPrice: state.totalPrice,
-    error: state.error
+    ings: state.ingredients.ingredients,
+    totalPrice: state.ingredients.totalPrice,
+    error: state.ingredients.error
   };
 };
 
@@ -149,7 +115,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(actionTypes.addIngredient(ingredientName)),
     onIngredientDeleted: ingredientName =>
       dispatch(actionTypes.removeIngredient(ingredientName)),
-    onInitializeComponent: () => dispatch(actionTypes.initIngredients())
+    onInitializeComponent: () => dispatch(actionTypes.initIngredients()),
+    onInitPurchase: () => dispatch(actionTypes.purchaseInit())
   };
 };
 
