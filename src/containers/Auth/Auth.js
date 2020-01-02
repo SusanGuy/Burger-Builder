@@ -5,6 +5,7 @@ import classes from "../Checkout/Contact-Data/ContactData.module.css";
 import * as actions from "../../store/Actions/index";
 import { connect } from "react-redux";
 import Spinner from "../../components/UI/Spinner/Spinner";
+import { Redirect } from "react-router-dom";
 class Auth extends Component {
   state = {
     controls: {
@@ -40,6 +41,12 @@ class Auth extends Component {
     formIsValid: false,
     isSignup: true
   };
+
+  componentDidMount() {
+    if (!this.props.building && this.props.authRedirectPath !== "/orders") {
+      this.props.onRedirect();
+    }
+  }
 
   checkValidity(value, rules) {
     let isValid = true;
@@ -150,8 +157,15 @@ class Auth extends Component {
       return <Spinner />;
     }
 
+    let authRedirect = null;
+
+    if (this.props.isAuthenticated) {
+      authRedirect = <Redirect to={this.props.authRedirectPath} />;
+    }
+
     return (
       <div className={classes.ContactData}>
+        {authRedirect}
         <h1> {this.state.isSignup ? "Sign-Up Form" : "Sign-In Form"}</h1>
         <form onSubmit={this.formSubmitHandler}>
           {form}
@@ -170,7 +184,10 @@ class Auth extends Component {
 const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
-    errorMsg: state.auth.error
+    errorMsg: state.auth.error,
+    isAuthenticated: state.auth.token !== null,
+    building: state.ingredients.building,
+    authRedirectPath: state.auth.authRedirectPath
   };
 };
 
@@ -178,7 +195,8 @@ const mapDispatchToProps = dispatch => {
   return {
     onAuth: (email, password, isSignup) =>
       dispatch(actions.auth(email, password, isSignup)),
-    onInit: () => dispatch(actions.initComponent())
+    onInit: () => dispatch(actions.initComponent()),
+    onRedirect: () => dispatch(actions.setAuthRedirectPath("/orders"))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Auth);
